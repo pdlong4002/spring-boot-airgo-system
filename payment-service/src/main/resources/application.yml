@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: payment-service
+  cloud:
+    config:
+      enabled: true
+  config:
+    import: optional:configserver:http://config-service:8888
+  profiles:
+    active: default

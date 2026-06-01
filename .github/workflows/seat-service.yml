@@ -1,0 +1,18 @@
+name: CI Seat Service
+
+on:
+  push:
+    branches: [ "main", "master" ]
+    paths:
+      - 'seat-service/**'
+  pull_request:
+    branches: [ "main", "master" ]
+    paths:
+      - 'seat-service/**'
+
+jobs:
+  trigger-build:
+    uses: ./.github/workflows/build-template.yml
+    with:
+      service-name: seat-service
+      service-dir: seat-service

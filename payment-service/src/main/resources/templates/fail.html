@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh Toán Thất Bại - AirGo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #ff4d4f;
+            --text-white: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.85);
+            --receipt-bg: rgba(255, 255, 255, 0.12);
+            --border-white: rgba(255, 255, 255, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: #fff1f0;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(255, 204, 199, 0.3) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(255, 229, 224, 0.3) 0px, transparent 50%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .fail-card {
+            width: 100%;
+            max-width: 420px;
+            background: var(--primary-bg);
+            border-radius: 36px;
+            padding: 40px 30px;
+            box-shadow: 0 25px 50px rgba(255, 77, 79, 0.25);
+            color: var(--text-white);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: popUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popUp {
+            from { opacity: 0; transform: scale(0.9) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .home-icon-btn {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            background: none;
+            border: none;
+            color: var(--text-white);
+            font-size: 22px;
+            cursor: pointer;
+            opacity: 0.9;
+            transition: opacity 0.2s;
+        }
+
+        .home-icon-btn:hover {
+            opacity: 1;
+        }
+
+        .cross-circle {
+            width: 130px;
+            height: 130px;
+            background: var(--text-white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 40px auto 30px auto;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+            animation: bounceIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            70% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .cross-circle span {
+            font-size: 55px;
+            color: var(--primary-bg);
+            font-weight: bold;
+            line-height: 1;
+            margin-top: -3px;
+        }
+
+        .title {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 12px;
+        }
+
+        .desc {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--text-muted);
+            line-height: 1.5;
+            padding: 0 10px;
+            margin-bottom: 30px;
+        }
+
+        .info-panel {
+            background: var(--receipt-bg);
+            border: 1px solid var(--border-white);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 35px;
+            text-align: left;
+            backdrop-filter: blur(10px);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+
+        .info-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-label {
+            color: rgba(255, 255, 255, 0.75);
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-weight: 700;
+            color: var(--text-white);
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background: var(--text-white);
+            color: var(--primary-bg);
+            border: none;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="fail-card">
+    <!-- Icon Home góc trên bên trái -->
+    <button class="home-icon-btn" onclick="window.location.href='/'">⌂</button>
+
+    <!-- Tick tròn trắng lớn ở giữa -->
+    <div class="cross-circle">
+        <span>✕</span>
+    </div>
+
+    <h1 class="title">Thanh Toán Bị Hủy</h1>
+    <p class="desc">Rất tiếc, giao dịch của bạn không thể hoàn tất hoặc đã bị hủy từ chối bởi nhà cung cấp thanh toán.</p>
+
+    <!-- Khung thông tin chi tiết lỗi -->
+    <div class="info-panel">
+        <div class="info-row">
+            <span class="info-label">Trạng thái</span>
+            <span class="info-value" style="color: #ffccc7;">FAILED / CANCELED</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Mã đặt vé (PNR)</span>
+            <span class="info-value" th:text="${bookingCode}" style="letter-spacing: 0.5px;">AG123456</span>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <a href="/" class="btn-primary">Thử thanh toán lại</a>
+    </div>
+</div>
+
+</body>
+</html>

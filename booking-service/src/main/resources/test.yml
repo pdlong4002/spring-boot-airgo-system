@@ -1,0 +1,80 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: booking-service
+  cloud:
+    config:
+      enabled: false
+    openfeign:
+      circuitbreaker:
+        enabled: true
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/microservice?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: ${DATABASE_USERNAME:csdl_longsama}
+    password: ${DATABASE_PASSWORD:12345}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # Kafka Configuration
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        enable.idempotence: true
+    consumer:
+      group-id: booking-payment-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.type.mapping: "com.ramennsama.springboot.paymentservice.dto.event.PaymentSuccessEvent:com.ramennsama.springboot.bookingservice.dto.event.PaymentSuccessEvent"
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+eureka:
+  client:
+    enabled: false
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+
+seat-service:
+  url: http://${SEAT_SERVICE_HOST:localhost}:8083/api/v1/seats
+
+flight-service:
+  url: http://${FLIGHT_SERVICE_HOST:localhost}:8082/api/v1/flights
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /docs
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      seat-service:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 15s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        ignoreExceptions:
+          - feign.FeignException.Conflict
+          - feign.FeignException.NotFound
+          - feign.FeignException.BadRequest
+  timelimiter:
+    instances:
+      seat-service:
+        timeoutDuration: 3s

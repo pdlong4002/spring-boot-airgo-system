@@ -1,0 +1,47 @@
+name: Build Service Template
+
+on:
+  workflow_call:
+    inputs:
+      service-name:
+        required: true
+        type: string
+      service-dir:
+        required: true
+        type: string
+
+jobs:
+  build:
+    name: Build & Package
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout code từ repository
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Step 2: Cài đặt JDK 21 và cấu hình caching cho Maven
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      # Step 3: Compile và đóng gói ứng dụng Spring Boot thành file JAR
+      # Bỏ qua Test (-DskipTests) vì môi trường CI sạch không có cơ sở dữ liệu (MySQL/Redis) đang chạy
+      - name: Build JAR with Maven
+        run: |
+          cd ${{ inputs.service-dir }}
+          chmod +x mvnw
+          ./mvnw clean package -DskipTests
+
+      # Step 4: Thiết lập môi trường Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Step 5: Đóng gói Docker Image từ Dockerfile trong thư mục của service
+      - name: Build Docker Image
+        run: |
+          cd ${{ inputs.service-dir }}
+          docker build -t airgo-${{ inputs.service-name }}:latest .

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AirGo Payment Gateway - Cổng Thanh Toán</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1d9bf0;
+            --primary-hover: #1a8cd8;
+            --bg-page: #f0f9ff;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-gray: #64748b;
+            --border-color: #e2e8f0;
+            --input-bg: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            background-image:
+                radial-gradient(at 0% 0%, rgba(125, 211, 252, 0.4) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(186, 230, 253, 0.4) 0px, transparent 50%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--text-dark);
+        }
+
+        .payment-card {
+            width: 100%;
+            max-width: 440px;
+            background: var(--card-bg);
+            border-radius: 36px;
+            padding: 30px 24px;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            display: flex;
+            flex-direction: column;
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding: 0 4px;
+        }
+
+        .back-btn,
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--text-gray);
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover,
+        .close-btn:hover {
+            background: #f1f5f9;
+            color: var(--text-dark);
+        }
+
+        .title {
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-gray);
+            margin-bottom: 6px;
+            padding-left: 4px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--input-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 16px;
+            color: var(--text-dark);
+            font-size: 15px;
+            font-weight: 500;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(29, 155, 240, 0.1);
+        }
+
+        .readonly-input {
+            background: #f1f5f9;
+            border-color: #e2e8f0;
+            color: var(--primary);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: not-allowed;
+        }
+
+        .methods-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 10px;
+            margin-bottom: 25px;
+        }
+
+        .method-option {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .method-option input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .method-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: #ffffff;
+            border: 1.5px solid var(--border-color);
+            border-radius: 20px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .method-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .method-icon {
+            font-size: 22px;
+            width: 38px;
+            height: 38px;
+            background: #f8fafc;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .method-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .method-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .method-desc {
+            font-size: 11px;
+            color: var(--text-gray);
+            margin-top: 1px;
+        }
+
+        .radio-dot {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .radio-dot::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            transform: scale(0);
+            transition: transform 0.2s ease;
+        }
+
+        /* Khi input được chọn */
+        .method-option input:checked+.method-card {
+            border-color: var(--primary);
+            background: rgba(29, 155, 240, 0.02);
+            box-shadow: 0 8px 20px rgba(29, 155, 240, 0.05);
+        }
+
+        .method-option input:checked+.method-card .radio-dot {
+            border-color: var(--primary);
+        }
+
+        .method-option input:checked+.method-card .radio-dot::after {
+            transform: scale(1);
+        }
+
+        /* Panel chi tiết mở rộng khi chọn VNPay (giống Card info trong ảnh) */
+        .expandable-panel {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), margin 0.3s ease;
+            background: #f0f9ff;
+            border-radius: 16px;
+            border: 1px solid rgba(29, 155, 240, 0.15);
+            padding: 0 16px;
+            margin-top: -4px;
+            margin-bottom: 8px;
+        }
+
+        .expandable-panel.active {
+            max-height: 200px;
+            padding: 16px;
+            margin-top: 4px;
+            margin-bottom: 12px;
+        }
+
+        .card-details-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .total-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 22px;
+            padding: 0 4px;
+        }
+
+        .total-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .total-amount {
+            font-size: 19px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            border-radius: 24px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(29, 155, 240, 0.2);
+        }
+
+        .submit-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 12px 24px rgba(29, 155, 240, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="payment-card">
+        <div class="header">
+            <button class="back-btn" type="button" onclick="history.back()">⟨</button>
+            <h1 class="title">Thanh Toán</h1>
+            <button class="close-btn" type="button" onclick="window.location.href='/'">✕</button>
+        </div>
+
+        <form th:action="@{/api/v1/vnpay/create-payment-form}" method="POST" id="paymentForm">
+            <div class="form-group">
+                <label class="form-label" for="fullName">Họ và tên khách hàng</label>
+                <input class="form-control" type="text" id="fullName" name="fullName" placeholder="VD: NGUYEN VAN A"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="email">Email nhận vé điện tử</label>
+                <input class="form-control" type="email" id="email" name="email" placeholder="VD: mail@example.com"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="txnRef">Mã đặt vé (Mã PNR)</label>
+                <input class="form-control readonly-input" type="text" id="txnRef" name="txnRef" th:value="${txnRef}"
+                    required readonly>
+            </div>
+
+            <!-- Bộ chọn phương thức thanh toán giống UI ảnh mẫu -->
+            <div class="methods-container">
+                <label class="method-option">
+                    <input type="radio" name="paymentMethod" value="VNPAY" checked onclick="togglePanel(true)">
+                    <div class="method-card">
+                        <div class="method-left">
+                            <span class="method-icon">🇻🇳</span>
+                            <div class="method-info">
+                                <span class="method-name method-title">Thẻ nội địa / Quốc tế (VNPAY)</span>
+                                <span class="method-desc">Cổng thanh toán quốc gia</span>
+                            </div>
+                        </div>
+                        <div class="radio-dot"></div>
+                    </div>
+                </label>
+
+                <!-- Panel thông tin thẻ mô phỏng VNPay giống hệt UI Card info trong hình mẫu -->
+                <div class="expandable-panel active" id="vnpayPanel">
+                    <div class="form-group" style="margin-bottom: 8px;">
+                        <label class="form-label" style="font-size: 11px; margin-bottom: 4px;">Card information</label>
+                        <input class="form-control" type="text" placeholder="9704 1985 2696 2026"
+                            style="padding: 10px 12px; font-size: 13px; font-family: monospace;" readonly>
+                    </div>
+                    <div class="card-details-grid">
+                        <input class="form-control" type="text" placeholder="07/26"
+                            style="padding: 10px 12px; font-size: 13px;" readonly>
+                        <input class="form-control" type="text" placeholder="123"
+                            style="padding: 10px 12px; font-size: 13px;" readonly>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="total-container">
+                <span class="total-label">Tổng thanh toán</span>
+                <!-- Bổ sung input ẩn để submit dữ liệu số tiền -->
+                <input type="hidden" name="amount" id="amountInput" value="150">
+                <span class="total-amount" id="amountDisplay">$150.00</span>
+            </div>
+
+            <button class="submit-btn" type="submit">Xác nhận thanh toán</button>
+        </form>
+    </div>
+
+    <script>
+        function togglePanel(show) {
+            const panel = document.getElementById('vnpayPanel');
+            const form = document.getElementById('paymentForm');
+            if (show) {
+                panel.classList.add('active');
+                // Cập nhật action form để trỏ đến VNPayController mới (giả định có endpoint submit từ form)
+                form.action = '/api/v1/vnpay/create-payment-form'; // Hoặc endpoint form tương ứng nếu có
+            } else {
+                panel.classList.remove('active');
+                form.action = '/api/v1/payments/create-payment';
+            }
+        }
+
+        // Cho phép đổi giá trị amount ngẫu nhiên hoặc update động từ form
+        const amount = 150;
+        document.getElementById('amountInput').value = amount;
+        document.getElementById('amountDisplay').textContent = '$' + amount.toFixed(2);
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,36 @@
+# Maven build artifacts (compiled classes, JAR files)
+**/target/
+**/target/**
+
+# IDE files and settings
+.idea/
+**/.idea/
+**/*.iml
+.vscode/
+**/.vscode/
+*.iws
+
+# Sensitive configuration and secrets
+.env
+.env.*
+
+# Local docker database volumes & storage
+/kafka-data/
+/mysql/mysql-data/
+
+# OS-specific files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Log files
+*.log
+**/logs/
+
+# Custom project ignores
+markdown-file/
+test-case/
+tech.md
+interview.md
+cv.tex
+demo.tex

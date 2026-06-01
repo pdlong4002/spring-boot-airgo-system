@@ -1,0 +1,56 @@
+server:
+  port: 8086
+
+spring:
+  application:
+    name: notification-service
+
+  # Configuration for Kafka Message Broker
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
+    consumer:
+      group-id: notification-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.type.mapping: "com.ramennsama.springboot.authservice.dto.event.OtpEvent:com.ramennsama.springboot.notificationservice.dto.event.OtpEvent,com.ramennsama.springboot.bookingservice.dto.event.BookingConfirmedEvent:com.ramennsama.springboot.notificationservice.dto.event.BookingConfirmedEvent"
+
+  # Configuration for Sending Emails via SMTP (e.g. Gmail)
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_ADDRESS}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+        debug: true
+
+  # Thymeleaf templates configuration for beautiful HTML Emails
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/
+  instance:
+    hostname: notification-service
+    prefer-ip-address: true
+
+# Swagger & API Documentation Sync
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /docs

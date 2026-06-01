@@ -1,0 +1,18 @@
+name: CI Notification Service
+
+on:
+  push:
+    branches: [ "main", "master" ]
+    paths:
+      - 'notification-service/**'
+  pull_request:
+    branches: [ "main", "master" ]
+    paths:
+      - 'notification-service/**'
+
+jobs:
+  trigger-build:
+    uses: ./.github/workflows/build-template.yml
+    with:
+      service-name: notification-service
+      service-dir: notification-service

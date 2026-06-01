@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Vé máy bay điện tử - AirGo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 650px;
+            margin: 30px auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #0052d4, #4364f7);
+            color: #ffffff;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 600;
+        }
+        .pnr-box {
+            background-color: #eef2f7;
+            border-radius: 6px;
+            padding: 20px;
+            margin: 25px 30px;
+            text-align: center;
+        }
+        .pnr-title {
+            font-size: 14px;
+            color: #555555;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0 0 5px 0;
+        }
+        .pnr-code {
+            font-size: 32px;
+            font-weight: 800;
+            color: #0052d4;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+        .section {
+            padding: 0 30px;
+            margin-bottom: 25px;
+        }
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #0052d4;
+            border-bottom: 2px solid #eef2f7;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+        .flight-info-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .flight-info-table td {
+            padding: 8px 0;
+            vertical-align: top;
+        }
+        .flight-info-table td.label {
+            width: 30%;
+            color: #777777;
+            font-weight: 500;
+        }
+        .flight-info-table td.value {
+            color: #333333;
+            font-weight: bold;
+        }
+        .passenger-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .passenger-table th {
+            background-color: #f8fafc;
+            color: #475569;
+            text-align: left;
+            padding: 10px;
+            font-size: 14px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .passenger-table td {
+            padding: 12px 10px;
+            font-size: 14px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #334155;
+        }
+        .total-amount {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ef4444;
+            text-align: right;
+            margin-top: 20px;
+            padding-right: 10px;
+        }
+        .footer {
+            background-color: #f8fafc;
+            text-align: center;
+            padding: 25px 20px;
+            font-size: 12px;
+            color: #64748b;
+            border-top: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Cảm ơn bạn đã lựa chọn AirGo!</h1>
+        </div>
+        
+        <div class="pnr-box">
+            <p class="pnr-title">Mã Đặt Chỗ (PNR Code)</p>
+            <p class="pnr-code" th:text="${booking.bookingCode}">VJ8X2B</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Thông Tin Hành Trình</div>
+            <table class="flight-info-table">
+                <tr>
+                    <td class="label">Chuyến bay:</td>
+                    <td class="value" th:text="${booking.flightNumber}">VN123</td>
+                </tr>
+                <tr>
+                    <td class="label">Khởi hành từ:</td>
+                    <td class="value" th:text="${booking.departureAirport}">Noi Bai (HAN)</td>
+                </tr>
+                <tr>
+                    <td class="label">Điểm đến:</td>
+                    <td class="value" th:text="${booking.arrivalAirport}">Tan Son Nhat (SGN)</td>
+                </tr>
+                <tr>
+                    <td class="label">Giờ đi:</td>
+                    <td class="value" th:text="${booking.departureTime}">2026-06-01 08:00</td>
+                </tr>
+                <tr>
+                    <td class="label">Giờ đến:</td>
+                    <td class="value" th:text="${booking.arrivalTime}">2026-06-01 10:00</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Danh Sách Hành Khách & Ghế</div>
+            <table class="passenger-table">
+                <thead>
+                    <tr>
+                        <th>Tên Hành Khách</th>
+                        <th>Số Ghế</th>
+                        <th>Hạng Vé</th>
+                        <th style="text-align: right;">Giá Vé</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="p : ${booking.passengers}">
+                        <td th:text="${p.fullName}">Nguyen Van A</td>
+                        <td th:text="${p.seatNumber}">1A</td>
+                        <td th:text="${p.flightClass}">BUSINESS</td>
+                        <td style="text-align: right;" th:text="${'$' + p.ticketPrice}">$250.00</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="total-amount">
+                Tổng thanh toán: <span th:text="${'$' + booking.totalAmount}">$250.00</span>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Chúc bạn có một chuyến bay an toàn và vui vẻ cùng AirGo!</p>
+            <p>Mọi thắc mắc vui lòng liên hệ Tổng đài CSKH: 1900-AIRGO hoặc gửi email tới airgo.system@gmail.com</p>
+            <p style="margin-top: 15px; font-size: 11px;">© 2026 AirGo System Inc. Tất cả quyền được bảo lưu.</p>
+        </div>
+    </div>
+</body>
+</html>

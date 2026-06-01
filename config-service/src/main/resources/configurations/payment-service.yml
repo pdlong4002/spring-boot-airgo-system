@@ -1,0 +1,50 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: payment-service
+
+  # Kafka Producer Configuration for Event-Driven updates
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        enable.idempotence: true
+
+  # Thymeleaf configuration for Premium HTML views
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/
+  instance:
+    hostname: payment-service
+    prefer-ip-address: true
+
+# VNPay Sandbox Configuration
+vnpay:
+  version: "2.1.0"
+  command: "pay"
+  currCode: "VND"
+  ortherType: "other"
+  locale: "vn"
+  tmnCode: ${TMN_CODE} # VNPay Sandbox Test Code
+  hashSecret: ${SECRET_KEY} # VNPay Sandbox Test Secret Key
+  payUrl: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
+  returnUrl: "http://localhost:8080/api/v1/vnpay/return"
+
+# Swagger API docs configuration
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /docs

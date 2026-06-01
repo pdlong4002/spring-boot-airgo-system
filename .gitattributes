@@ -1,0 +1,3 @@
+# Force Unix line endings (LF) for Maven wrapper execution files and configurations
+**/mvnw text eol=lf
+**/.mvn/wrapper/maven-wrapper.properties text eol=lf

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh Toán Thành Công - AirGo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #1d9bf0;
+            --text-white: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.85);
+            --receipt-bg: rgba(255, 255, 255, 0.12);
+            --border-white: rgba(255, 255, 255, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: #f0f9ff;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(125, 211, 252, 0.3) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(186, 230, 253, 0.3) 0px, transparent 50%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .success-card {
+            width: 100%;
+            max-width: 420px;
+            background: var(--primary-bg);
+            border-radius: 36px;
+            padding: 40px 30px;
+            box-shadow: 0 25px 50px rgba(29, 155, 240, 0.25);
+            color: var(--text-white);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: popUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popUp {
+            from { opacity: 0; transform: scale(0.9) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .home-icon-btn {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            background: none;
+            border: none;
+            color: var(--text-white);
+            font-size: 22px;
+            cursor: pointer;
+            opacity: 0.9;
+            transition: opacity 0.2s;
+        }
+
+        .home-icon-btn:hover {
+            opacity: 1;
+        }
+
+        .tick-circle {
+            width: 130px;
+            height: 130px;
+            background: var(--text-white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 40px auto 30px auto;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+            animation: bounceIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            70% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .tick-circle span {
+            font-size: 65px;
+            color: var(--primary-bg);
+            font-weight: bold;
+            line-height: 1;
+            margin-top: -5px;
+        }
+
+        .title {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 12px;
+        }
+
+        .desc {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--text-muted);
+            line-height: 1.5;
+            padding: 0 10px;
+            margin-bottom: 30px;
+        }
+
+        /* Khung Receipt tinh tế bán trong suốt */
+        .receipt-panel {
+            background: var(--receipt-bg);
+            border: 1px solid var(--border-white);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 35px;
+            text-align: left;
+            backdrop-filter: blur(10px);
+        }
+
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+
+        .receipt-row:last-child {
+            margin-bottom: 0;
+            padding-top: 12px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.15);
+        }
+
+        .receipt-label {
+            color: rgba(255, 255, 255, 0.75);
+            font-weight: 500;
+        }
+
+        .receipt-value {
+            font-weight: 700;
+            color: var(--text-white);
+        }
+
+        .amount-highlight {
+            font-size: 17px;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background: var(--text-white);
+            color: var(--primary-bg);
+            border: none;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-ghost {
+            width: 100%;
+            padding: 15px;
+            background: transparent;
+            color: var(--text-white);
+            border: 1.5px solid rgba(255, 255, 255, 0.4);
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
+<body>
+
+<div class="success-card">
+    <!-- Icon Home góc trên bên trái -->
+    <button class="home-icon-btn" onclick="window.location.href='/'">⌂</button>
+
+    <!-- Tick tròn trắng lớn ở giữa -->
+    <div class="tick-circle">
+        <span>✓</span>
+    </div>
+
+    <h1 class="title">Đã Xác Nhận Vé</h1>
+    <p class="desc">Cảm ơn bạn đã lựa chọn AirGo. Vé máy bay điện tử và chi tiết giao dịch đã được gửi trực tiếp qua email.</p>
+
+    <!-- Khung Receipt bán trong suốt sang trọng -->
+    <div class="receipt-panel">
+        <div class="receipt-row">
+            <span class="receipt-label">Hành khách</span>
+            <span class="receipt-value" th:text="${fullName}">Nguyen Van A</span>
+        </div>
+        <div class="receipt-row">
+            <span class="receipt-label">Mã đặt vé (PNR)</span>
+            <span class="receipt-value" th:text="${bookingCode}" style="color: #ffffff; letter-spacing: 0.5px;">AG123456</span>
+        </div>
+        <div class="receipt-row">
+            <span class="receipt-label">Hình thức</span>
+            <span class="receipt-value" th:text="${paymentMethod}">VNPAY</span>
+        </div>
+        <div class="receipt-row">
+            <span class="receipt-label">Tổng thanh toán</span>
+            <span class="receipt-value amount-highlight" th:text="${'$' + amount + '0'}">$150.00</span>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <a href="/" class="btn-primary">Quay lại trang chủ</a>
+        <button class="btn-ghost" onclick="alert('Đã sao chép liên kết chia sẻ hành trình!')">Chia sẻ hành trình</button>
+    </div>
+</div>
+
+</body>
+</html>

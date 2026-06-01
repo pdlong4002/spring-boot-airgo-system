@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mã xác thực OTP của bạn - AirGo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #0052d4, #4364f7, #6fb1fc);
+            color: #ffffff;
+            text-align: center;
+            padding: 30px 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        .content {
+            padding: 40px 30px;
+            color: #333333;
+            line-height: 1.6;
+        }
+        .otp-box {
+            background-color: #f0f4f8;
+            border: 2px dashed #4364f7;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 36px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            color: #0052d4;
+            padding: 15px;
+            margin: 30px 0;
+        }
+        .footer {
+            background-color: #f9fbfd;
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #777777;
+            border-top: 1px solid #eef2f5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 th:text="${title}">Hệ thống xác thực AirGo</h1>
+        </div>
+        <div class="content">
+            <p>Xin chào,</p>
+            <p th:text="${message}">Chúng tôi nhận được yêu cầu xác thực tài khoản từ email này. Vui lòng sử dụng mã OTP dưới đây để hoàn tất quá trình xác minh của bạn:</p>
+            <div class="otp-box" th:text="${otpCode}">123456</div>
+            <p>Mã OTP này có hiệu lực trong vòng <strong th:text="${duration}">10</strong> phút. Vì lý do bảo mật, vui lòng không chia sẻ mã này cho bất kỳ ai.</p>
+            <p>Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email này.</p>
+            <br>
+            <p>Trân trọng,<br><strong>Đội ngũ hỗ trợ AirGo System</strong></p>
+        </div>
+        <div class="footer">
+            <p>© 2026 AirGo Inc. Tất cả quyền được bảo lưu.</p>
+        </div>
+    </div>
+</body>
+</html>

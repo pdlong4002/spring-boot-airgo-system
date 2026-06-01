@@ -1,0 +1,18 @@
+name: CI Booking Service
+
+on:
+  push:
+    branches: [ "main", "master" ]
+    paths:
+      - 'booking-service/**'
+  pull_request:
+    branches: [ "main", "master" ]
+    paths:
+      - 'booking-service/**'
+
+jobs:
+  trigger-build:
+    uses: ./.github/workflows/build-template.yml
+    with:
+      service-name: booking-service
+      service-dir: booking-service

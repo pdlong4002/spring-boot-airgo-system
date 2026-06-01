@@ -1,0 +1,53 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: payment-service
+  cloud:
+    config:
+      enabled: false
+
+  # Kafka Producer Configuration for Event-Driven updates
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        enable.idempotence: true
+        max.block.ms: 1000 # Connection timeout in 1s if Kafka is missing to prevent hanging
+
+  # Thymeleaf configuration for Premium HTML views
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+
+eureka:
+  client:
+    enabled: false
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+
+# VNPay Sandbox Configuration
+vnpay:
+  version: "2.1.0"
+  command: "pay"
+  currCode: "VND"
+  ortherType: "other"
+  locale: "vn"
+  tmnCode: ${TMN_CODE:URHM5JJK} # VNPay Sandbox Test Code
+  hashSecret: ${SECRET_KEY:53QVOMW5H8V6S0Y6TBBESVPW6MPD4OEI} # VNPay Sandbox Test Secret Key
+  payUrl: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
+  returnUrl: "http://localhost:8085/api/v1/vnpay/return"
+
+# Swagger API docs configuration
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /docs

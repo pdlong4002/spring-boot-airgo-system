@@ -1,0 +1,18 @@
+name: CI Auth Service
+
+on:
+  push:
+    branches: [ "main", "master" ]
+    paths:
+      - 'auth-service/**'
+  pull_request:
+    branches: [ "main", "master" ]
+    paths:
+      - 'auth-service/**'
+
+jobs:
+  trigger-build:
+    uses: ./.github/workflows/build-template.yml
+    with:
+      service-name: auth-service
+      service-dir: auth-service
