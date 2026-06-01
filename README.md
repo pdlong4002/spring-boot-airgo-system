@@ -171,4 +171,3 @@ The project utilizes `springdoc-openapi` for API documentation. You can access t
 `http://localhost:8080/swagger-ui.html`
 
 ---
-*Built with ❤️ for modern software architecture patterns.*
